@@ -1,0 +1,59 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    // razor view page (mvc view page)
+    @{
+    }
+*@
+
+@model OdeToFood.ViewModels.HomeIndexViewModel
+@* @model OdeToFood.Models.Restaurant *@
+    @* USE this '@@model' directive to tell Razor view engine; exact type of the Model incoming *@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <h1>Message of the day: @Model.CurrentMessage</h1>
+    <table>
+        @foreach (var restaurant in Model.Restaurants)
+        {
+        <tr>
+            <td>@restaurant.Id</td>
+            <td>@restaurant.Name</td>
+            <td>
+            @*
+            <!-- // HREF -->
+                <a href="/home/details/@restaurant.Id">Details</a>
+
+            <!--// ACTIONLINK - more robust than HREF, because consults ROUTING tbl; but clunky -->
+                @Html.ActionLink("Go to Dets", "Details", "Home", new { id = restaurant.Id })
+                            <!-- // "STRING_TO_SHOW", "ACTION_NAME", "CONTROLLER_NAME", new {/*Anonymously typed dictionary input object!*/} -->
+            *@
+            <!--// TAG-HELPERS -->
+                <a asp-action="Details" asp-route-id="@restaurant.Id">More!!</a>
+                <!-- asp-action="ACTION_NAME" // will auto figure out how to get to action
+                     asp-route-paramname="paramSrc_OrValue" // to pass in input value to action -->
+            </td>
+        </tr>
+        }
+    </table>
+
+    <a asp-action="Create">Add Restaurant</a>
+
+    @*
+            <h1>@Model.Name</h1>
+        <!--        Or
+            <h1>@@this.Model.Name</h1>
+        -->
+            <div>The ID is @Model.Id</div>
+    *@
+    <!-- cannot IMPLICITLY do @@Model.Id or @@Model.Name here wrt our restaurant obj; because this is dynamic typed prop;
+                                         will work @@ compile time BUT at run time the prop may/may NOT exist! -->
+    <!-- however after EXPLICITLY using @@model directive above to specify type of model as Restaurant obj, can access Id/Name props-->
+
+    <h3>@this.Url</h3><!-- prefix means we can call C# code inline; @@this.___ finds prop of base razor view object to invoke!-->
+    <h2>Hiya</h2>
+    <div>This is the Index view!</div>
+</body>
+</html>

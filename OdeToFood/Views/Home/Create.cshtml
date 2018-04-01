@@ -1,0 +1,40 @@
+﻿@using OdeToFood.Models
+@model OdeToFood.Models.Restaurant
+
+<h1>Create</h1>
+
+<form method="post">
+    <!-- action="/"--> <!-- removed action param bec, by default form posts back to same URL it came from -->
+
+
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />                    <!-- more dynamic; matches model prop
+                                                                        +
+                                                generates/sets input type(to 'text' here)   -->
+        @*  // OR
+        <input type="text" name="Name" value="" />  <!--match name to name of prop in Model -->
+        *@
+
+        <span asp-validation-for="Name"></span>
+    </div>
+
+
+
+    <div>
+        <label asp-for="Cuisine"></label>
+        <select asp-for="Cuisine"
+                asp-items="@Html.GetEnumSelectList<CuisineType>()"></select>
+        @*  // OR
+        <select>
+            <option value="value">text</option>
+        </select>
+        *@
+        <span asp-validation-for="Cuisine" ></span>
+    </div>
+
+
+
+    <input type="submit" name="save" value="Save" />
+</form>
+<div asp-validation-summary="All"></div>

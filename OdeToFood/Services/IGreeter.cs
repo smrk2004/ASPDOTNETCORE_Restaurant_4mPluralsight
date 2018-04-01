@@ -1,0 +1,23 @@
+﻿using Microsoft.Extensions.Configuration;
+
+namespace OdeToFood.Services
+{
+	public interface IGreeter
+	{
+		string MessageOfTheDay();
+	}
+	public class Greeter : IGreeter
+	{
+		private IConfiguration _configuration;
+
+		public Greeter(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
+
+		public string MessageOfTheDay()
+		{
+			return _configuration["Greeting"];//"Greetings Earthlings";
+		} 
+	}
+}
