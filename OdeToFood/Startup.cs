@@ -6,22 +6,35 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OdeToFood.Data;
 using OdeToFood.Services;
 
 namespace OdeToFood
 {
     public class Startup
     {
+		public Startup(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
+
 		// This method gets called by the runtime. Use this method to add services to the container.
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc();
-
-			services.AddSingleton<IRestaurantData, InMemoryRestaurantData>();	// USE BEC, Scoped is for single REQ only in context of in memory db we want same additive effect of a real db's transactions to be simulated when NEW restaurant data added
+			services.AddDbContext<OdeToFoodDbContext>(options => options.UseSqlServer(
+																						_configuration
+																							.GetConnectionString("OdeToFood")
+																					 )
+													 );
+			services.AddScoped<IRestaurantData, SqlRestaurantData>();		// Use Bec real DB now + DbContext is NOT threadsafe; to use on single logical-thread(i.e. by scoping PER Request!)
+		  //services.AddSingleton<IRestaurantData, InMemoryRestaurantData>();	
+																			// USE BEC, Scoped is for single REQ only in context of in memory db we want same additive effect of a real db's transactions to be simulated when NEW restaurant data added
 				  //.AddScoped<IRestaurantData, InMemoryRestaurantData>();  // NOTE: for NOW - NOT thread safe!
 																			// AddScoped - create & use	 service instance once per every HTTP request/reused throughout that request then thrown away!
 																			//	-> typically what we want for a data access component!
@@ -125,5 +138,7 @@ namespace OdeToFood
 			//	or	/customRandomRoutingPathString/Home/Index/4
 			routeBuilder.MapRoute("Default2", "customRandomRoutingPathString/{controller=Home}/{action=Index}/{id?}");
 		}
+
+		private IConfiguration _configuration;
 	}
 }

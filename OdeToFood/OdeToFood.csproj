@@ -8,4 +8,11 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" /> <!-- meta package that brings in other packages; including the Microsoft.AspNetCore.Mvc package!-->
   </ItemGroup>
 
+  <!--
+    DOTNet core CLI extension to be be able to call the "dotnet ef"-command/extension!
+  -->
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0"></DotNetCliToolReference>
+  </ItemGroup>  
+
 </Project>
